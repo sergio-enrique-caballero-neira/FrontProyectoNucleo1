@@ -1,0 +1,42 @@
+<div class="login-page">
+  <div class="login-bg" aria-hidden="true">
+    <span class="orb orb--one"></span>
+    <span class="orb orb--two"></span>
+    <span class="orb orb--three"></span>
+    <div class="grid-overlay"></div>
+  </div>
+  <div class="login-glow" aria-hidden="true"></div>
+
+  <main class="login">
+    <section class="login-card" aria-label="Formulario de inicio de sesión">
+      <div class="login-head">
+        <h1 class="login-title">Bienvenido de nuevo</h1>
+        <p class="login-subtitle">Inicia sesión para gestionar tus horarios</p>
+      </div>
+
+      <form class="login-form">
+        <label class="field">
+          <i class="fa-solid fa-user field-icon" aria-hidden="true"></i>
+          <input class="field-input" id="usuario" name="usuario" type="text" placeholder=" " autocomplete="username" required />
+          <span class="field-label">Usuario</span>
+        </label>
+
+        <label class="field">
+          <i class="fa-solid fa-lock field-icon" aria-hidden="true"></i>
+          <input class="field-input" id="contrasena" name="contrasena" type="password" placeholder=" " autocomplete="current-password" required />
+          <span class="field-label">Contraseña</span>
+        </label>
+
+        <div class="login-options">
+          <a class="link" routerLink="/recuperar">¿Olvidaste tu contraseña?</a>
+          <a class="link" routerLink="/registro">Registrarse</a>
+        </div>
+
+        <button class="btn-login" type="submit">
+          <span class="btn-login-text">Iniciar sesión</span>
+          <i class="fa-solid fa-arrow-right btn-login-icon" aria-hidden="true"></i>
+        </button>
+      </form>
+    </section>
+  </main>
+</div>

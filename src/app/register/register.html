@@ -1,0 +1,59 @@
+<div class="login-page">
+  <div class="login-bg" aria-hidden="true">
+    <span class="orb orb--one"></span>
+    <span class="orb orb--two"></span>
+    <span class="orb orb--three"></span>
+    <div class="grid-overlay"></div>
+  </div>
+  <div class="login-glow" aria-hidden="true"></div>
+
+  <main class="login">
+    <section class="login-card" aria-label="Formulario de registro">
+      <div class="login-head">
+        <h1 class="login-title">Crear cuenta</h1>
+        <p class="login-subtitle">Regístrate para empezar a gestionar tus horarios</p>
+      </div>
+
+      <form class="login-form">
+        <label class="field">
+          <i class="fa-solid fa-user field-icon" aria-hidden="true"></i>
+          <input class="field-input" id="nombre" name="nombre" type="text" placeholder=" " autocomplete="name" required />
+          <span class="field-label">Nombre completo</span>
+        </label>
+
+        <label class="field">
+          <i class="fa-solid fa-at field-icon" aria-hidden="true"></i>
+          <input class="field-input" id="usuario" name="usuario" type="text" placeholder=" " autocomplete="username" required />
+          <span class="field-label">Usuario</span>
+        </label>
+
+        <label class="field">
+          <i class="fa-solid fa-envelope field-icon" aria-hidden="true"></i>
+          <input class="field-input" id="correo" name="correo" type="email" placeholder=" " autocomplete="email" required />
+          <span class="field-label">Correo electrónico</span>
+        </label>
+
+        <label class="field">
+          <i class="fa-solid fa-lock field-icon" aria-hidden="true"></i>
+          <input class="field-input" id="contrasena" name="contrasena" type="password" placeholder=" " autocomplete="new-password" required />
+          <span class="field-label">Contraseña</span>
+        </label>
+
+        <label class="field">
+          <i class="fa-solid fa-lock field-icon" aria-hidden="true"></i>
+          <input class="field-input" id="confirmar" name="confirmar" type="password" placeholder=" " autocomplete="new-password" required />
+          <span class="field-label">Confirmar contraseña</span>
+        </label>
+
+        <div class="login-options">
+          <a class="link" routerLink="/">¿Ya tienes cuenta? Inicia sesión</a>
+        </div>
+
+        <button class="btn-login" type="submit">
+          <span class="btn-login-text">Crear cuenta</span>
+          <i class="fa-solid fa-user-plus btn-login-icon" aria-hidden="true"></i>
+        </button>
+      </form>
+    </section>
+  </main>
+</div>
