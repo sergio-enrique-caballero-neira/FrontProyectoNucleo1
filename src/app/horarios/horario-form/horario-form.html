@@ -3,7 +3,7 @@
     <div>
       <h1 class="page-title">{{ isEdit ? 'Editar horario' : 'Nuevo horario' }}</h1>
       <p class="page-subtitle">
-        {{ isEdit ? 'Modifica el bloque horario' : 'Asocia un bloque de 2 horas a una asignatura' }}
+        {{ isEdit ? 'Modifica los datos del horario' : 'Registra un nuevo horario' }}
       </p>
     </div>
   </div>
@@ -11,37 +11,13 @@
   <app-alert-message type="success" [message]="alert" *ngIf="alert"></app-alert-message>
 
   <form class="form-card" (ngSubmit)="guardar()">
-    <app-form-field label="Asignatura" forId="asignaturaId" [error]="errors['asignaturaId'] || ''">
-      <select id="asignaturaId" name="asignaturaId" [(ngModel)]="form.asignaturaId">
-        <option [ngValue]="null">Selecciona una asignatura</option>
-        <option *ngFor="let a of asignaturas" [ngValue]="a.id">{{ a.nombre }}</option>
-      </select>
+    <app-form-field label="Código" forId="codigo" [error]="errors['codigo'] || ''">
+      <input id="codigo" name="codigo" type="text" [(ngModel)]="form.codigo" placeholder="Ej. HIS-2026-1" />
     </app-form-field>
 
-    <app-form-field label="Día" forId="diaSemana">
-      <select id="diaSemana" name="diaSemana" [(ngModel)]="form.diaSemana">
-        <option *ngFor="let d of dias" [value]="d">{{ d }}</option>
-      </select>
+    <app-form-field label="Carrera" forId="carrera" [error]="errors['carrera'] || ''">
+      <input id="carrera" name="carrera" type="text" [(ngModel)]="form.carrera" placeholder="Ej. Ingeniería de Sistemas" />
     </app-form-field>
-
-    <div class="form-row">
-      <app-form-field label="Hora de inicio" forId="horaInicio" [error]="errors['horaInicio'] || ''">
-        <input id="horaInicio" name="horaInicio" type="time" [(ngModel)]="form.horaInicio" />
-      </app-form-field>
-
-      <app-form-field label="Hora de fin" forId="horaFin" help="Se calcula automáticamente como inicio + 2 horas">
-        <input id="horaFin" type="text" [value]="horaFin" readonly />
-      </app-form-field>
-    </div>
-
-    <div class="rules-panel">
-      <h3>Reglas horarias</h3>
-      <ul>
-        <li>Franja permitida: 07:00–22:00 de lunes a viernes y 07:00–13:00 el sábado.</li>
-        <li>No se permiten sesiones entre las 12:00 y las 13:00.</li>
-        <li>Cada sesión dura exactamente 2 horas.</li>
-      </ul>
-    </div>
 
     <div class="form-actions">
       <app-button variant="secondary" type="button" (click)="cancelar()">Cancelar</app-button>

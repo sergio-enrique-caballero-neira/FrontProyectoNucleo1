@@ -6,12 +6,19 @@ export interface Asignatura {
   sesionesSemana: number;
 }
 
-export interface Horario {
+export interface BloqueHorario {
   id: number;
   asignaturaId: number;
   diaSemana: string;
   horaInicio: string;
   horaFin: string;
+}
+
+export interface Horario {
+  id: number;
+  codigo: string;
+  carrera: string;
+  bloques: BloqueHorario[];
 }
 
 export const DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -25,9 +32,32 @@ export const asignaturas: Asignatura[] = [
 ];
 
 export const horarios: Horario[] = [
-  { id: 1, asignaturaId: 1, diaSemana: 'Lunes', horaInicio: '07:00', horaFin: '09:00' },
-  { id: 2, asignaturaId: 2, diaSemana: 'Lunes', horaInicio: '09:00', horaFin: '11:00' },
-  { id: 3, asignaturaId: 3, diaSemana: 'Martes', horaInicio: '14:00', horaFin: '16:00' },
-  { id: 4, asignaturaId: 4, diaSemana: 'Miércoles', horaInicio: '18:00', horaFin: '20:00' },
-  { id: 5, asignaturaId: 5, diaSemana: 'Jueves', horaInicio: '07:00', horaFin: '09:00' },
+  {
+    id: 1,
+    codigo: 'HIS-2026-1',
+    carrera: 'Ingeniería de Sistemas',
+    bloques: [
+      { id: 1, asignaturaId: 1, diaSemana: 'Lunes', horaInicio: '07:00', horaFin: '09:00' },
+      { id: 2, asignaturaId: 2, diaSemana: 'Lunes', horaInicio: '09:00', horaFin: '11:00' },
+      { id: 3, asignaturaId: 3, diaSemana: 'Martes', horaInicio: '14:00', horaFin: '16:00' },
+    ],
+  },
+  {
+    id: 2,
+    codigo: 'HIS-2026-2',
+    carrera: 'Ingeniería de Sistemas',
+    bloques: [{ id: 4, asignaturaId: 4, diaSemana: 'Miércoles', horaInicio: '18:00', horaFin: '20:00' }],
+  },
+  {
+    id: 3,
+    codigo: 'HII-2026-1',
+    carrera: 'Ingeniería Industrial',
+    bloques: [{ id: 5, asignaturaId: 5, diaSemana: 'Jueves', horaInicio: '07:00', horaFin: '09:00' }],
+  },
+  {
+    id: 4,
+    codigo: 'HIS-2026-3',
+    carrera: 'Ingeniería de Sistemas',
+    bloques: [],
+  },
 ];

@@ -1,7 +1,7 @@
 .form-card {
   display: grid;
   gap: 16px;
-  max-width: 680px;
+  max-width: 560px;
   padding: 24px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -9,42 +9,9 @@
   box-shadow: var(--shadow-sm);
 }
 
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.rules-panel {
-  padding: 16px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-}
-
-.rules-panel h3 {
-  margin: 0 0 8px;
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-
-.rules-panel ul {
-  margin: 0;
-  padding-left: 18px;
-  color: var(--text-soft);
-  font-size: 0.85rem;
-  line-height: 1.7;
-}
-
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 8px;
-}
-
-@media (max-width: 560px) {
-  .form-row {
-    grid-template-columns: 1fr;
-  }
 }

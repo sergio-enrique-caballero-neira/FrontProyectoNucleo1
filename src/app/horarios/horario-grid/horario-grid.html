@@ -1,0 +1,90 @@
+<section class="page">
+  <div class="page-head">
+    <div>
+      <button class="back-link" type="button" (click)="volver()">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        Volver a horarios
+      </button>
+      <h1 class="page-title">{{ horario?.codigo ?? 'Horario' }}</h1>
+      <p class="page-subtitle">{{ horario?.carrera }}</p>
+    </div>
+  </div>
+
+  <app-alert-message *ngIf="alert" [type]="alertType" [message]="alert"></app-alert-message>
+
+  <ng-container *ngIf="horario; else noEncontrado">
+    <div class="grid-layout">
+      <aside class="sidebar">
+        <h2 class="sidebar-title">Asignaturas</h2>
+        <p class="sidebar-hint">Arrastra una asignatura a un bloque</p>
+        <div
+          class="subject-chip"
+          *ngFor="let a of asignaturas"
+          [class.is-disabled]="!puedeAgregar(a)"
+          draggable="true"
+          (dragstart)="onDragStartSubject($event, a)"
+        >
+          <span class="chip-code">{{ a.codigo }}</span>
+          <span class="chip-name">{{ a.nombre }}</span>
+          <span class="chip-count" [class.is-complete]="sesionesRestantes(a) === 0">
+            {{ bloquesDe(a.id) }}/{{ a.sesionesSemana }} sesiones
+          </span>
+        </div>
+      </aside>
+
+      <div class="week-column">
+        <div class="week">
+          <div class="week-head">
+            <div class="week-hour"></div>
+            <div class="week-day" *ngFor="let dia of dias">{{ dia }}</div>
+          </div>
+          <div class="week-row" *ngFor="let hora of horas">
+            <div class="week-hour">{{ hora }}</div>
+            <div
+              class="week-cell"
+              *ngFor="let dia of dias"
+              [class.is-blocked]="esBloqueado(hora)"
+              [class.is-disabled]="esFueraDeFranja(dia, hora)"
+              [class.is-drop-target]="!esBloqueado(hora) && !esFueraDeFranja(dia, hora)"
+              [class.drag-over]="dragOver === dia + '|' + hora"
+              (dragover)="onDragOver($event, dia, hora)"
+              (dragleave)="onDragLeave()"
+              (drop)="onDropCell($event, dia, hora)"
+            >
+              <span class="blocked-label" *ngIf="esBloqueado(hora)">Almuerzo</span>
+              <div
+                class="block-card"
+                *ngIf="horarioEn(dia, hora) as b"
+                draggable="true"
+                (dragstart)="onDragStartBlock($event, b)"
+              >
+                <div class="block-info">
+                  <span class="block-subject">{{ nombreAsignatura(b.asignaturaId) }}</span>
+                  <span class="block-time">{{ b.horaInicio }} - {{ b.horaFin }}</span>
+                </div>
+                <button class="block-remove" type="button" (click)="eliminarBloque(b)" aria-label="Eliminar bloque">
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="trash"
+          [class.drag-over]="trashOver"
+          (dragover)="onTrashOver($event)"
+          (dragleave)="onTrashLeave()"
+          (drop)="onDropTrash($event)"
+        >
+          <i class="fa-solid fa-trash" aria-hidden="true"></i>
+          <span>Arrastra un bloque aquí para eliminarlo</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noEncontrado>
+    <app-empty-state message="No se encontró el horario solicitado."></app-empty-state>
+  </ng-template>
+</section>

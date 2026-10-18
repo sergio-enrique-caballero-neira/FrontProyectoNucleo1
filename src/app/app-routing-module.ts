@@ -7,6 +7,7 @@ import { AppShell } from './shell/app-shell';
 import { AsignaturasList } from './asignaturas/asignaturas-list/asignaturas-list';
 import { AsignaturaForm } from './asignaturas/asignatura-form/asignatura-form';
 import { HorariosList } from './horarios/horarios-list/horarios-list';
+import { HorarioGrid } from './horarios/horario-grid/horario-grid';
 import { HorarioForm } from './horarios/horario-form/horario-form';
 
 const routes: Routes = [
@@ -24,6 +25,7 @@ const routes: Routes = [
       { path: 'asignaturas/:id/editar', component: AsignaturaForm },
       { path: 'horarios', component: HorariosList },
       { path: 'horarios/nuevo', component: HorarioForm },
+      { path: 'horarios/:id', component: HorarioGrid },
       { path: 'horarios/:id/editar', component: HorarioForm },
     ],
   },

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { asignaturas, Asignatura, horarios } from '../../data/sample-data';
+import { asignaturas, Asignatura } from '../../data/sample-data';
+import { HorarioService } from '../../data/horario.service';
 
 @Component({
   selector: 'app-asignaturas-list',
@@ -9,12 +10,13 @@ import { asignaturas, Asignatura, horarios } from '../../data/sample-data';
   styleUrls: ['./asignaturas-list.css'],
 })
 export class AsignaturasList {
+  private readonly router = inject(Router);
+  private readonly horarioService = inject(HorarioService);
+
   items: Asignatura[] = [...asignaturas];
   confirmOpen = false;
   hasSchedules = false;
   selected: Asignatura | null = null;
-
-  constructor(private readonly router: Router) {}
 
   get dialogTitle(): string {
     return this.hasSchedules ? 'Asignatura con horarios' : 'Eliminar asignatura';
@@ -40,7 +42,9 @@ export class AsignaturasList {
 
   abrirEliminar(item: Asignatura): void {
     this.selected = item;
-    this.hasSchedules = horarios.some((h) => h.asignaturaId === item.id);
+    this.hasSchedules = this.horarioService
+      .lista()
+      .some((horario) => horario.bloques.some((bloque) => bloque.asignaturaId === item.id));
     this.confirmOpen = true;
   }
 

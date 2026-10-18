@@ -17,6 +17,7 @@ import { AppEmptyState } from './shared/empty-state/empty-state';
 import { AsignaturasList } from './asignaturas/asignaturas-list/asignaturas-list';
 import { AsignaturaForm } from './asignaturas/asignatura-form/asignatura-form';
 import { HorariosList } from './horarios/horarios-list/horarios-list';
+import { HorarioGrid } from './horarios/horario-grid/horario-grid';
 import { HorarioForm } from './horarios/horario-form/horario-form';
 
 @NgModule({
@@ -36,6 +37,7 @@ import { HorarioForm } from './horarios/horario-form/horario-form';
     AsignaturasList,
     AsignaturaForm,
     HorariosList,
+    HorarioGrid,
     HorarioForm,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
