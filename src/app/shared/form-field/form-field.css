@@ -1,0 +1,64 @@
+.app-field {
+  display: grid;
+  gap: 6px;
+}
+
+.app-field-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.app-field input,
+.app-field select {
+  height: 46px;
+  padding: 0 14px;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.app-field input::placeholder {
+  color: var(--text-faint);
+}
+
+.app-field input:focus,
+.app-field select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+.app-field input:disabled,
+.app-field select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.app-field--error input,
+.app-field--error select {
+  border-color: var(--danger);
+}
+
+.app-field--error input:focus,
+.app-field--error select:focus {
+  box-shadow: 0 0 0 4px var(--danger-soft);
+}
+
+.app-field-help {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+
+.app-field-error {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--danger);
+}

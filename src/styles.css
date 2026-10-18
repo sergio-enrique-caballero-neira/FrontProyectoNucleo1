@@ -1,3 +1,69 @@
+:root {
+  --bg: #ffffff;
+  --bg-gradient:
+    radial-gradient(900px 520px at 82% -12%, rgba(0, 0, 0, 0.05), transparent 62%),
+    radial-gradient(760px 480px at -12% 108%, rgba(0, 0, 0, 0.04), transparent 60%),
+    linear-gradient(160deg, #ffffff, #f4f4f5 60%, #ffffff);
+  --surface: #ffffff;
+  --surface-2: #f4f4f5;
+  --card-bg: rgba(255, 255, 255, 0.86);
+  --border: rgba(0, 0, 0, 0.12);
+  --border-strong: rgba(0, 0, 0, 0.22);
+  --text: #0a0a0a;
+  --text-soft: #52525b;
+  --text-faint: #a1a1aa;
+  --accent: #0a0a0a;
+  --accent-contrast: #ffffff;
+  --accent-soft: #3f3f46;
+  --danger: #dc2626;
+  --danger-soft: rgba(220, 38, 38, 0.1);
+  --danger-contrast: #ffffff;
+  --success: #16a34a;
+  --success-soft: rgba(22, 163, 74, 0.12);
+  --ring: rgba(0, 0, 0, 0.16);
+  --orb: rgba(0, 0, 0, 0.08);
+  --sheen: rgba(0, 0, 0, 0.05);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 12px 30px -14px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 30px 60px -24px rgba(0, 0, 0, 0.3);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+:root[data-theme="dark"] {
+  --bg: #050505;
+  --bg-gradient:
+    radial-gradient(900px 520px at 82% -12%, rgba(255, 255, 255, 0.06), transparent 62%),
+    radial-gradient(760px 480px at -12% 108%, rgba(255, 255, 255, 0.05), transparent 60%),
+    linear-gradient(160deg, #050505, #0c0c0d 60%, #050505);
+  --surface: rgba(20, 20, 22, 0.72);
+  --surface-2: rgba(255, 255, 255, 0.05);
+  --card-bg: rgba(20, 20, 22, 0.72);
+  --border: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.22);
+  --text: #ffffff;
+  --text-soft: #a1a1aa;
+  --text-faint: #6b6b73;
+  --accent: #ffffff;
+  --accent-contrast: #0a0a0a;
+  --accent-soft: #d4d4d8;
+  --danger: #f87171;
+  --danger-soft: rgba(248, 113, 113, 0.12);
+  --danger-contrast: #0a0a0a;
+  --success: #4ade80;
+  --success-soft: rgba(74, 222, 128, 0.14);
+  --ring: rgba(255, 255, 255, 0.16);
+  --orb: rgba(255, 255, 255, 0.14);
+  --sheen: rgba(255, 255, 255, 0.09);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 12px 30px -14px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 30px 60px -24px rgba(0, 0, 0, 0.6);
+}
+
 *,
 *::before,
 *::after {
@@ -11,23 +77,21 @@ html {
 body {
   margin: 0;
   min-height: 100%;
-  font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font);
   font-size: 16px;
   line-height: 1.5;
-  color: #ffffff;
-  background-color: #050505;
-  background-image:
-    radial-gradient(900px 520px at 82% -12%, rgba(255, 255, 255, 0.06), transparent 62%),
-    radial-gradient(760px 480px at -12% 108%, rgba(255, 255, 255, 0.05), transparent 60%),
-    linear-gradient(160deg, #050505, #0c0c0d 60%, #050505);
+  color: var(--text);
+  background-color: var(--bg);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: rgba(255, 255, 255, 0.25);
-  color: #ffffff;
+  background: var(--accent);
+  color: var(--accent-contrast);
 }
 
 a {
@@ -36,6 +100,34 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid #ffffff;
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+
+.page {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: 32px 24px 56px;
+}
+
+.page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  margin: 6px 0 0;
+  color: var(--text-soft);
+  font-size: 0.92rem;
 }

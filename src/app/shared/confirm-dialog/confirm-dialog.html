@@ -1,0 +1,10 @@
+<div class="app-dialog-backdrop" *ngIf="open" (click)="cancelled.emit()">
+  <div class="app-dialog" role="dialog" aria-modal="true" [attr.aria-label]="title" (click)="$event.stopPropagation()">
+    <h2 class="app-dialog-title">{{ title }}</h2>
+    <p class="app-dialog-message">{{ message }}</p>
+    <div class="app-dialog-actions">
+      <app-button variant="secondary" type="button" (click)="cancelled.emit()">Cancelar</app-button>
+      <app-button variant="danger" type="button" (click)="confirmed.emit()">{{ confirmText }}</app-button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<section class="page">
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Asignaturas</h1>
+      <p class="page-subtitle">Gestiona las asignaturas del programa</p>
+    </div>
+    <app-button type="button" (click)="nueva()">Nueva asignatura</app-button>
+  </div>
+
+  <ng-container *ngIf="items.length; else empty">
+    <app-data-table>
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Nombre</th>
+          <th>Créditos</th>
+          <th>Sesiones por semana</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td>{{ item.codigo }}</td>
+          <td>{{ item.nombre }}</td>
+          <td>{{ item.creditos }}</td>
+          <td>{{ item.sesionesSemana }}</td>
+          <td>
+            <button class="row-action" type="button" (click)="editar(item)">Editar</button>
+            <button class="row-action row-action--danger" type="button" (click)="abrirEliminar(item)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </app-data-table>
+  </ng-container>
+
+  <ng-template #empty>
+    <app-empty-state message="Aún no hay asignaturas registradas."></app-empty-state>
+  </ng-template>
+
+  <app-confirm-dialog
+    [open]="confirmOpen"
+    [title]="dialogTitle"
+    [message]="dialogMessage"
+    [confirmText]="dialogConfirmText"
+    (confirmed)="confirmar()"
+    (cancelled)="cancelar()">
+  </app-confirm-dialog>
+</section>

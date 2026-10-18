@@ -1,0 +1,58 @@
+.app-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--accent-contrast);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    transform 0.25s var(--ease-out),
+    box-shadow 0.25s ease,
+    filter 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.app-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.app-button:active:not(:disabled) {
+  transform: translateY(0) scale(0.985);
+}
+
+.app-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.app-button--secondary {
+  color: var(--text);
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+
+.app-button--secondary:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  filter: none;
+}
+
+.app-button--danger {
+  color: var(--danger-contrast);
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+.app-button--danger:hover:not(:disabled) {
+  filter: brightness(1.08);
+}

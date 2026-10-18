@@ -6,6 +6,9 @@
     <div class="grid-overlay"></div>
   </div>
   <div class="login-glow" aria-hidden="true"></div>
+  <div class="auth-theme">
+    <app-theme-toggle></app-theme-toggle>
+  </div>
 
   <main class="login">
     <section class="login-card" aria-label="Formulario de inicio de sesión">
@@ -32,7 +35,7 @@
           <a class="link" routerLink="/registro">Registrarse</a>
         </div>
 
-        <button class="btn-login" type="submit">
+        <button class="btn-login" type="button" routerLink="/asignaturas">
           <span class="btn-login-text">Iniciar sesión</span>
           <i class="fa-solid fa-arrow-right btn-login-icon" aria-hidden="true"></i>
         </button>
