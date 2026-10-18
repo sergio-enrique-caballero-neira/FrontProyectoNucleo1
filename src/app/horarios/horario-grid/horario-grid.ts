@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -10,6 +10,8 @@ import {
 } from '../../data/sample-data';
 import { HorarioService } from '../../data/horario.service';
 import {
+  bloquesSeSolapan,
+  calcularHoraFin,
   DURACION_SESION_HORAS,
   esFilaAlmuerzo,
   esInicioValido,
@@ -23,9 +25,15 @@ import {
   templateUrl: './horario-grid.html',
   styleUrls: ['./horario-grid.css'],
 })
-export class HorarioGrid {
+export class HorarioGrid implements OnDestroy {
   dias = DIAS_SEMANA;
   horas = Array.from({ length: 13 }, (_, i) => `${String(i + 7).padStart(2, '0')}:00`);
+  readonly filasAlmuerzo = new Set(this.horas.filter(esFilaAlmuerzo));
+  readonly celdasInvalidas = new Set(
+    this.dias.flatMap((dia) =>
+      this.horas.filter((hora) => !esInicioValido(dia, hora)).map((hora) => `${dia}|${hora}`),
+    ),
+  );
   asignaturas = asignaturas;
 
   readonly duracionSesion = DURACION_SESION_HORAS;
@@ -34,7 +42,7 @@ export class HorarioGrid {
   private readonly router = inject(Router);
   private readonly horarioService = inject(HorarioService);
 
-  private readonly paramId = toSignal(this.route.paramMap.pipe(), {
+  private readonly paramId = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
   });
 
@@ -60,6 +68,15 @@ export class HorarioGrid {
   trashOver = false;
   confirmOpen = false;
   bloquePendiente: BloqueHorario | null = null;
+
+  private alertTimer?: ReturnType<typeof setTimeout>;
+
+  constructor() {
+    effect(() => {
+      this.paramId();
+      this.alert = '';
+    });
+  }
 
   volver(): void {
     this.router.navigate(['/horarios']);
@@ -90,21 +107,8 @@ export class HorarioGrid {
     return this.sesionesRestantes(asignatura) > 0;
   }
 
-  esInicioValido(dia: string, hora: string): boolean {
-    return esInicioValido(dia, hora);
-  }
-
-  esFilaAlmuerzo(hora: string): boolean {
-    return esFilaAlmuerzo(hora);
-  }
-
   filaDesde(indice: number): number {
     return indice + 2;
-  }
-
-  bloqueEn(indiceHora: number, dia: string): BloqueHorario | undefined {
-    const hora = this.horas[indiceHora];
-    return this.bloques().find((bloque) => bloque.diaSemana === dia && bloque.horaInicio === hora);
   }
 
   indiceDeHora(hora: string): number {
@@ -118,10 +122,6 @@ export class HorarioGrid {
   onDragStartSubject(event: DragEvent, asignatura: Asignatura): void {
     if (!this.puedeAgregar(asignatura)) {
       event.preventDefault();
-      this.mostrarAlerta(
-        'error',
-        `${asignatura.nombre} ya alcanzó sus ${asignatura.sesionesSemana} sesiones semanales.`,
-      );
       return;
     }
     event.dataTransfer?.setData('text/plain', `asignatura:${asignatura.id}`);
@@ -134,13 +134,9 @@ export class HorarioGrid {
   onDragOverCell(event: DragEvent, indiceHora: number, dia: string): void {
     event.preventDefault();
     const hora = this.horas[indiceHora];
-    this.dragOver = `${dia}|${hora}`;
-    this.invalidTarget = this.esInicioValido(dia, hora) ? '' : `${dia}|${hora}`;
-  }
-
-  onDragOverTrash(event: DragEvent): void {
-    event.preventDefault();
-    this.invalidTarget = '';
+    const clave = `${dia}|${hora}`;
+    this.dragOver = clave;
+    this.invalidTarget = this.celdasInvalidas.has(clave) ? clave : '';
   }
 
   onDragLeave(): void {
@@ -162,13 +158,6 @@ export class HorarioGrid {
       const asignaturaId = Number(data.split(':')[1]);
       const asignatura = this.asignaturas.find((item) => item.id === asignaturaId);
       if (!asignatura) {
-        return;
-      }
-      if (!this.puedeAgregar(asignatura)) {
-        this.mostrarAlerta(
-          'error',
-          `${asignatura.nombre} ya alcanzó sus ${asignatura.sesionesSemana} sesiones semanales.`,
-        );
         return;
       }
       const resultado = this.horarioService.agregarBloque(horario.id, {
@@ -260,6 +249,12 @@ export class HorarioGrid {
   }
 
   onBloqueKeydown(event: KeyboardEvent, bloque: BloqueHorario): void {
+    if (event.key === 'Delete' || event.key === 'Backspace') {
+      event.preventDefault();
+      this.abrirEliminar(bloque);
+      return;
+    }
+
     const paso = event.shiftKey ? DURACION_SESION_HORAS : 1;
     let indiceDia = this.dias.indexOf(bloque.diaSemana);
     let indiceHora = this.indiceDeHora(bloque.horaInicio);
@@ -323,13 +318,6 @@ export class HorarioGrid {
     if (!horario) {
       return;
     }
-    if (!this.puedeAgregar(asignatura)) {
-      this.mostrarAlerta(
-        'error',
-        `${asignatura.nombre} ya alcanzó sus ${asignatura.sesionesSemana} sesiones semanales.`,
-      );
-      return;
-    }
     const destino = this.primerEspacioLibre();
     if (!destino) {
       this.mostrarAlerta('error', 'No hay un espacio libre válido en esta rejilla.');
@@ -356,14 +344,14 @@ export class HorarioGrid {
         if (!esInicioValido(dia, hora)) {
           continue;
         }
-        const fin = this.calcularFin(hora);
-        const solapada = this.bloques().some(
-          (bloque) =>
-            bloque.diaSemana === dia &&
-            hora < this.calcularFin(bloque.horaInicio) &&
-            bloque.horaInicio < fin,
-        );
-        if (!solapada) {
+        const candidato: BloqueHorario = {
+          id: 0,
+          asignaturaId: 0,
+          diaSemana: dia,
+          horaInicio: hora,
+          horaFin: calcularHoraFin(hora),
+        };
+        if (!this.bloques().some((bloque) => bloquesSeSolapan(bloque, candidato))) {
           return { dia, hora };
         }
       }
@@ -371,14 +359,17 @@ export class HorarioGrid {
     return null;
   }
 
-  private calcularFin(hora: string): string {
-    const [h, m] = hora.split(':').map(Number);
-    return `${String(h + DURACION_SESION_HORAS).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-  }
-
   private mostrarAlerta(tipo: 'success' | 'error', mensaje: string): void {
     this.alertType = tipo;
     this.alert = mensaje;
+    clearTimeout(this.alertTimer);
+    this.alertTimer = setTimeout(() => {
+      this.alert = '';
+    }, 4000);
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this.alertTimer);
   }
 
   get franjaResumen(): string {

@@ -45,7 +45,8 @@
         <div
           class="subject-chip"
           *ngFor="let a of asignaturas"
-          [class]="'subject-chip tone-' + tonoDe(a.id) + (puedeAgregar(a) ? '' : ' is-disabled')"
+          [ngClass]="'tone-' + tonoDe(a.id)"
+          [class.is-disabled]="!puedeAgregar(a)"
           [attr.tabindex]="0"
           [attr.aria-disabled]="!puedeAgregar(a)"
           [attr.aria-label]="
@@ -89,8 +90,8 @@
               *ngFor="let dia of dias; let indiceDia = index"
               [style.grid-row]="indiceHora + 2"
               [style.grid-column]="indiceDia + 2"
-              [class.is-almuerzo]="esFilaAlmuerzo(hora)"
-              [class.is-disabled]="!esInicioValido(dia, hora)"
+              [class.is-almuerzo]="filasAlmuerzo.has(hora)"
+              [class.is-disabled]="celdasInvalidas.has(dia + '|' + hora)"
               [class.is-invalid]="invalidTarget === dia + '|' + hora"
               [class.drag-over]="dragOver === dia + '|' + hora"
               [attr.aria-hidden]="true"
@@ -98,14 +99,14 @@
               (dragleave)="onDragLeave()"
               (drop)="onDropCell($event, indiceHora, dia)"
             >
-              <span class="blocked-label" *ngIf="esFilaAlmuerzo(hora)">Almuerzo</span>
+              <span class="blocked-label" *ngIf="filasAlmuerzo.has(hora)">Almuerzo</span>
             </div>
           </ng-container>
 
           <ng-container *ngFor="let b of bloques()">
             <div
               class="block-card"
-              [class]="'block-card tone-' + tonoDe(b.asignaturaId)"
+              [ngClass]="'tone-' + tonoDe(b.asignaturaId)"
               [style.grid-column]="columnaDe(b.diaSemana)"
               [style.grid-row]="filaDesde(indiceDeHora(b.horaInicio)) + ' / span ' + duracionSesion"
               [class.is-focused]="estaSeleccionado(b)"

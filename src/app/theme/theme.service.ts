@@ -18,16 +18,37 @@ export class ThemeService {
   }
 
   toggle(): void {
-    this.theme.set(this.theme() === 'dark' ? 'light' : 'dark');
-    localStorage.setItem(STORAGE_KEY, this.theme());
+    const next: Theme = this.theme() === 'dark' ? 'light' : 'dark';
+    this.theme.set(next);
+    try {
+      this.storage()?.setItem(STORAGE_KEY, next);
+    } catch {}
   }
 
   private initialTheme(): Theme {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = this.storedTheme();
     if (stored === 'light' || stored === 'dark') {
       return stored;
     }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return this.document.defaultView?.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+  }
+
+  private storedTheme(): string | null {
+    try {
+      return this.storage()?.getItem(STORAGE_KEY) ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  private storage(): Storage | null {
+    try {
+      return this.document.defaultView?.localStorage ?? null;
+    } catch {
+      return null;
+    }
   }
 
   private apply(theme: Theme): void {

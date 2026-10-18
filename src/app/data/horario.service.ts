@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { BloqueHorario, Horario, horarios as sampleHorarios } from './sample-data';
+import { asignaturas, BloqueHorario, Horario, horarios as sampleHorarios } from './sample-data';
 import {
   bloquesSeSolapan,
   calcularHoraFin,
@@ -52,6 +52,21 @@ export class HorarioService {
     const horario = this.obtener(horarioId);
     if (!horario) {
       return { ok: false, motivo: 'El horario ya no existe.' };
+    }
+
+    const asignatura = asignaturas.find((item) => item.id === datos.asignaturaId);
+    if (!asignatura) {
+      return { ok: false, motivo: 'La asignatura indicada no existe.' };
+    }
+
+    const bloqueados = horario.bloques.filter(
+      (bloque) => bloque.asignaturaId === datos.asignaturaId,
+    ).length;
+    if (bloqueados >= asignatura.sesionesSemana) {
+      return {
+        ok: false,
+        motivo: `${asignatura.nombre} ya alcanzó sus ${asignatura.sesionesSemana} sesiones semanales.`,
+      };
     }
 
     const invalido = this.revisarReglas(horario, datos.diaSemana, datos.horaInicio);

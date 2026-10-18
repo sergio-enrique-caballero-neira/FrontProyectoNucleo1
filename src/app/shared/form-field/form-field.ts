@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 
 let secuenciaCampo = 0;
 

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { asignaturas } from '../../data/sample-data';
 
@@ -13,24 +14,25 @@ export class AsignaturaForm {
   errors: Record<string, string> = {};
   alert = '';
   isEdit = false;
-  editingId: number | null = null;
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-  ) {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    const found = asignaturas.find((item) => item.id === id);
-    if (found) {
-      this.isEdit = true;
-      this.editingId = found.id;
-      this.form = {
-        codigo: found.codigo,
-        nombre: found.nombre,
-        creditos: found.creditos,
-        sesionesSemana: found.sesionesSemana,
-      };
-    }
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
+  constructor() {
+    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+      const found = asignaturas.find((item) => item.id === Number(params.get('id')));
+      this.isEdit = found !== undefined;
+      this.errors = {};
+      this.alert = '';
+      this.form = found
+        ? {
+            codigo: found.codigo,
+            nombre: found.nombre,
+            creditos: found.creditos,
+            sesionesSemana: found.sesionesSemana,
+          }
+        : { codigo: '', nombre: '', creditos: 3, sesionesSemana: 2 };
+    });
   }
 
   guardar(): void {

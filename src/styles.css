@@ -28,7 +28,6 @@
   --radius-md: 14px;
   --radius-lg: 22px;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 12px 30px -14px rgba(0, 0, 0, 0.25);
   --shadow-lg: 0 30px 60px -24px rgba(0, 0, 0, 0.3);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -45,12 +44,6 @@
   --tone-5-fg: #ffffff;
   --tone-6-bg: #0e7490;
   --tone-6-fg: #ffffff;
-  --tone-1-soft: rgba(15, 118, 110, 0.12);
-  --tone-2-soft: rgba(180, 83, 9, 0.12);
-  --tone-3-soft: rgba(67, 56, 202, 0.12);
-  --tone-4-soft: rgba(157, 23, 77, 0.12);
-  --tone-5-soft: rgba(63, 98, 18, 0.12);
-  --tone-6-soft: rgba(14, 116, 144, 0.12);
 }
 
 :root[data-theme='dark'] {
@@ -80,7 +73,6 @@
   --orb: rgba(255, 255, 255, 0.14);
   --sheen: rgba(255, 255, 255, 0.09);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 12px 30px -14px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 30px 60px -24px rgba(0, 0, 0, 0.6);
   --tone-1-bg: #2dd4bf;
   --tone-1-fg: #042f2e;
@@ -94,12 +86,6 @@
   --tone-5-fg: #1a2e05;
   --tone-6-bg: #67e8f9;
   --tone-6-fg: #083344;
-  --tone-1-soft: rgba(45, 212, 191, 0.16);
-  --tone-2-soft: rgba(251, 191, 36, 0.16);
-  --tone-3-soft: rgba(165, 180, 252, 0.16);
-  --tone-4-soft: rgba(249, 168, 212, 0.16);
-  --tone-5-soft: rgba(190, 242, 100, 0.16);
-  --tone-6-soft: rgba(103, 232, 249, 0.16);
 }
 
 *,
@@ -168,4 +154,52 @@ a {
   margin: 6px 0 0;
   color: var(--text-soft);
   font-size: 0.92rem;
+}
+
+.form-card {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.row-action {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.row-action:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+
+.row-action--danger {
+  color: var(--danger);
+}
+
+.row-action--danger:hover {
+  border-color: var(--danger);
 }

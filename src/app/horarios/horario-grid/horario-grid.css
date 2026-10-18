@@ -354,37 +354,31 @@
 .tone-1 {
   --tone-bg: var(--tone-1-bg);
   --tone-fg: var(--tone-1-fg);
-  --tone-soft: var(--tone-1-soft);
   --tone-border: var(--tone-1-bg);
 }
 .tone-2 {
   --tone-bg: var(--tone-2-bg);
   --tone-fg: var(--tone-2-fg);
-  --tone-soft: var(--tone-2-soft);
   --tone-border: var(--tone-2-bg);
 }
 .tone-3 {
   --tone-bg: var(--tone-3-bg);
   --tone-fg: var(--tone-3-fg);
-  --tone-soft: var(--tone-3-soft);
   --tone-border: var(--tone-3-bg);
 }
 .tone-4 {
   --tone-bg: var(--tone-4-bg);
   --tone-fg: var(--tone-4-fg);
-  --tone-soft: var(--tone-4-soft);
   --tone-border: var(--tone-4-bg);
 }
 .tone-5 {
   --tone-bg: var(--tone-5-bg);
   --tone-fg: var(--tone-5-fg);
-  --tone-soft: var(--tone-5-soft);
   --tone-border: var(--tone-5-bg);
 }
 .tone-6 {
   --tone-bg: var(--tone-6-bg);
   --tone-fg: var(--tone-6-fg);
-  --tone-soft: var(--tone-6-soft);
   --tone-border: var(--tone-6-bg);
 }
 

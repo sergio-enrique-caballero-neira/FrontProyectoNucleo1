@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HorarioService } from '../../data/horario.service';
 
@@ -19,13 +20,15 @@ export class HorarioForm {
   private readonly horarioService = inject(HorarioService);
 
   constructor() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    const found = this.horarioService.obtener(id);
-    if (found) {
-      this.isEdit = true;
-      this.editingId = found.id;
-      this.form = { codigo: found.codigo, carrera: found.carrera };
-    }
+    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+      const found = this.horarioService.obtener(Number(params.get('id')));
+      this.isEdit = found !== undefined;
+      this.editingId = found?.id ?? null;
+      this.errors = {};
+      this.form = found
+        ? { codigo: found.codigo, carrera: found.carrera }
+        : { codigo: '', carrera: '' };
+    });
   }
 
   guardar(): void {

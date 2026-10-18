@@ -21,37 +21,31 @@ export function esFilaAlmuerzo(hora: string): boolean {
 }
 
 export function sesionCruzariaAlmuerzo(horaInicio: string): boolean {
-  const inicio = horaInicio;
-  const fin = calcularHoraFin(horaInicio);
-  return inicio < HORA_ALMUERZO_FIN && fin > HORA_ALMUERZO_INICIO;
+  return horaInicio < HORA_ALMUERZO_FIN && calcularHoraFin(horaInicio) > HORA_ALMUERZO_INICIO;
 }
 
-export function excedeFranjaDelDia(dia: string, horaInicio: string): boolean {
-  const fin = calcularHoraFin(horaInicio);
-  if (horaInicio < HORA_INICIO_MINIMA) {
-    return true;
-  }
-  return dia === DIA_SABADO ? fin > HORA_LIMITE_SABADO : horaInicio > HORA_INICIO_MAXIMA;
-}
-
-export function esInicioValido(dia: string, horaInicio: string): boolean {
-  if (sesionCruzariaAlmuerzo(horaInicio)) {
-    return false;
-  }
-  return !excedeFranjaDelDia(dia, horaInicio);
-}
-
-export function motivoInicioInvalido(dia: string, horaInicio: string): string {
+function motivoInvalido(dia: string, horaInicio: string): string | null {
   if (sesionCruzariaAlmuerzo(horaInicio)) {
     return `La sesión de ${horaInicio} a ${calcularHoraFin(horaInicio)} invade el descanso de 12:00 a 13:00.`;
   }
   if (horaInicio < HORA_INICIO_MINIMA) {
     return `La jornada inicia a las ${HORA_INICIO_MINIMA}.`;
   }
-  if (dia === DIA_SABADO) {
+  if (dia === DIA_SABADO && calcularHoraFin(horaInicio) > HORA_LIMITE_SABADO) {
     return `El ${DIA_SABADO} solo admite sesiones hasta las ${HORA_LIMITE_SABADO}.`;
   }
-  return `La última sesión de la jornada inicia a las ${HORA_INICIO_MAXIMA}.`;
+  if (horaInicio > HORA_INICIO_MAXIMA) {
+    return `La última sesión de la jornada inicia a las ${HORA_INICIO_MAXIMA}.`;
+  }
+  return null;
+}
+
+export function esInicioValido(dia: string, horaInicio: string): boolean {
+  return motivoInvalido(dia, horaInicio) === null;
+}
+
+export function motivoInicioInvalido(dia: string, horaInicio: string): string {
+  return motivoInvalido(dia, horaInicio) ?? '';
 }
 
 export function bloquesSeSolapan(a: BloqueHorario, b: BloqueHorario): boolean {

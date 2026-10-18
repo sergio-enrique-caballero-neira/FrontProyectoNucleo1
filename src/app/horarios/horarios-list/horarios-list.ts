@@ -7,7 +7,6 @@ import { HorarioService } from '../../data/horario.service';
   selector: 'app-horarios-list',
   standalone: false,
   templateUrl: './horarios-list.html',
-  styleUrls: ['./horarios-list.css'],
 })
 export class HorariosList {
   private readonly router = inject(Router);
