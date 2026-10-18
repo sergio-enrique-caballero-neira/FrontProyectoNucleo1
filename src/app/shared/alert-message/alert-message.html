@@ -1,4 +1,9 @@
 <div class="app-alert" [class.app-alert--error]="type === 'error'" role="alert" *ngIf="message">
-  <i class="fa-solid" [class.fa-circle-check]="type === 'success'" [class.fa-circle-exclamation]="type === 'error'" aria-hidden="true"></i>
+  <i
+    class="fa-solid"
+    [class.fa-circle-check]="type === 'success'"
+    [class.fa-circle-exclamation]="type === 'error'"
+    aria-hidden="true"
+  ></i>
   <span>{{ message }}</span>
 </div>

@@ -1,0 +1,62 @@
+import { BloqueHorario } from './sample-data';
+
+export const DURACION_SESION_HORAS = 2;
+
+export const HORA_INICIO_MINIMA = '07:00';
+export const HORA_INICIO_MAXIMA = '19:00';
+
+export const HORA_ALMUERZO_INICIO = '12:00';
+export const HORA_ALMUERZO_FIN = '13:00';
+
+export const HORA_LIMITE_SABADO = '13:00';
+export const DIA_SABADO = 'Sábado';
+
+export function calcularHoraFin(hora: string): string {
+  const [h, m] = hora.split(':').map(Number);
+  return `${String(h + DURACION_SESION_HORAS).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+}
+
+export function esFilaAlmuerzo(hora: string): boolean {
+  return hora === HORA_ALMUERZO_INICIO;
+}
+
+export function sesionCruzariaAlmuerzo(horaInicio: string): boolean {
+  const inicio = horaInicio;
+  const fin = calcularHoraFin(horaInicio);
+  return inicio < HORA_ALMUERZO_FIN && fin > HORA_ALMUERZO_INICIO;
+}
+
+export function excedeFranjaDelDia(dia: string, horaInicio: string): boolean {
+  const fin = calcularHoraFin(horaInicio);
+  if (horaInicio < HORA_INICIO_MINIMA) {
+    return true;
+  }
+  return dia === DIA_SABADO ? fin > HORA_LIMITE_SABADO : horaInicio > HORA_INICIO_MAXIMA;
+}
+
+export function esInicioValido(dia: string, horaInicio: string): boolean {
+  if (sesionCruzariaAlmuerzo(horaInicio)) {
+    return false;
+  }
+  return !excedeFranjaDelDia(dia, horaInicio);
+}
+
+export function motivoInicioInvalido(dia: string, horaInicio: string): string {
+  if (sesionCruzariaAlmuerzo(horaInicio)) {
+    return `La sesión de ${horaInicio} a ${calcularHoraFin(horaInicio)} invade el descanso de 12:00 a 13:00.`;
+  }
+  if (horaInicio < HORA_INICIO_MINIMA) {
+    return `La jornada inicia a las ${HORA_INICIO_MINIMA}.`;
+  }
+  if (dia === DIA_SABADO) {
+    return `El ${DIA_SABADO} solo admite sesiones hasta las ${HORA_LIMITE_SABADO}.`;
+  }
+  return `La última sesión de la jornada inicia a las ${HORA_INICIO_MAXIMA}.`;
+}
+
+export function bloquesSeSolapan(a: BloqueHorario, b: BloqueHorario): boolean {
+  if (a.diaSemana !== b.diaSemana) {
+    return false;
+  }
+  return a.horaInicio < b.horaFin && b.horaInicio < a.horaFin;
+}

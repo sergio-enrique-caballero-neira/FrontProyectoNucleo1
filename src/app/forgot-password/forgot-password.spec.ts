@@ -1,12 +1,14 @@
 import { TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ForgotPassword } from './forgot-password';
+import { ThemeToggle } from '../theme/theme-toggle/theme-toggle';
 
 describe('ForgotPassword', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterModule.forRoot([])],
-      declarations: [ForgotPassword],
+      imports: [CommonModule, RouterModule.forRoot([])],
+      declarations: [ForgotPassword, ThemeToggle],
     }).compileComponents();
   });
 

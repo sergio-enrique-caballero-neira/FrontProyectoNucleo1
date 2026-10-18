@@ -46,13 +46,17 @@ export const horarios: Horario[] = [
     id: 2,
     codigo: 'HIS-2026-2',
     carrera: 'Ingeniería de Sistemas',
-    bloques: [{ id: 4, asignaturaId: 4, diaSemana: 'Miércoles', horaInicio: '18:00', horaFin: '20:00' }],
+    bloques: [
+      { id: 4, asignaturaId: 4, diaSemana: 'Miércoles', horaInicio: '18:00', horaFin: '20:00' },
+    ],
   },
   {
     id: 3,
     codigo: 'HII-2026-1',
     carrera: 'Ingeniería Industrial',
-    bloques: [{ id: 5, asignaturaId: 5, diaSemana: 'Jueves', horaInicio: '07:00', horaFin: '09:00' }],
+    bloques: [
+      { id: 5, asignaturaId: 5, diaSemana: 'Jueves', horaInicio: '07:00', horaFin: '09:00' },
+    ],
   },
   {
     id: 4,

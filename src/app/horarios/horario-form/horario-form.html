@@ -8,15 +8,27 @@
     </div>
   </div>
 
-  <app-alert-message type="success" [message]="alert" *ngIf="alert"></app-alert-message>
-
   <form class="form-card" (ngSubmit)="guardar()">
-    <app-form-field label="Código" forId="codigo" [error]="errors['codigo'] || ''">
-      <input id="codigo" name="codigo" type="text" [(ngModel)]="form.codigo" placeholder="Ej. HIS-2026-1" />
+    <app-form-field #codigoField label="Código" forId="codigo" [error]="errors['codigo'] || ''">
+      <input
+        id="codigo"
+        name="codigo"
+        type="text"
+        [(ngModel)]="form.codigo"
+        placeholder="Ej. HIS-2026-1"
+        [attr.aria-describedby]="codigoField.describedBy"
+      />
     </app-form-field>
 
-    <app-form-field label="Carrera" forId="carrera" [error]="errors['carrera'] || ''">
-      <input id="carrera" name="carrera" type="text" [(ngModel)]="form.carrera" placeholder="Ej. Ingeniería de Sistemas" />
+    <app-form-field #carreraField label="Carrera" forId="carrera" [error]="errors['carrera'] || ''">
+      <input
+        id="carrera"
+        name="carrera"
+        type="text"
+        [(ngModel)]="form.carrera"
+        placeholder="Ej. Ingeniería de Sistemas"
+        [attr.aria-describedby]="carreraField.describedBy"
+      />
     </app-form-field>
 
     <div class="form-actions">

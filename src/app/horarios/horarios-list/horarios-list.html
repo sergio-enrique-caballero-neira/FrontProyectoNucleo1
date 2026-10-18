@@ -25,7 +25,13 @@
           <td>
             <button class="row-action" type="button" (click)="ver(item.id)">Ver</button>
             <button class="row-action" type="button" (click)="editar(item)">Editar</button>
-            <button class="row-action row-action--danger" type="button" (click)="abrirEliminar(item)">Eliminar</button>
+            <button
+              class="row-action row-action--danger"
+              type="button"
+              (click)="abrirEliminar(item)"
+            >
+              Eliminar
+            </button>
           </td>
         </tr>
       </tbody>
@@ -41,6 +47,7 @@
     title="Eliminar horario"
     message="¿Estás seguro de que deseas eliminar este horario y todos sus bloques? Esta acción no se puede deshacer."
     (confirmed)="confirmar()"
-    (cancelled)="cancelar()">
+    (cancelled)="cancelar()"
+  >
   </app-confirm-dialog>
 </section>

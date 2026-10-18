@@ -3,7 +3,11 @@
     <div>
       <h1 class="page-title">{{ isEdit ? 'Editar asignatura' : 'Nueva asignatura' }}</h1>
       <p class="page-subtitle">
-        {{ isEdit ? 'Modifica los datos de la asignatura' : 'Completa los datos para registrar una asignatura' }}
+        {{
+          isEdit
+            ? 'Modifica los datos de la asignatura'
+            : 'Completa los datos para registrar una asignatura'
+        }}
       </p>
     </div>
   </div>
@@ -12,19 +16,50 @@
 
   <form class="form-card" (ngSubmit)="guardar()">
     <app-form-field label="Nombre" forId="nombre" [error]="errors['nombre'] || ''">
-      <input id="nombre" name="nombre" type="text" [(ngModel)]="form.nombre" placeholder="Ej. Programación I" />
+      <input
+        id="nombre"
+        name="nombre"
+        type="text"
+        [(ngModel)]="form.nombre"
+        placeholder="Ej. Programación I"
+      />
     </app-form-field>
 
     <app-form-field label="Código" forId="codigo" [error]="errors['codigo'] || ''">
-      <input id="codigo" name="codigo" type="text" [(ngModel)]="form.codigo" placeholder="Ej. SIS101" />
+      <input
+        id="codigo"
+        name="codigo"
+        type="text"
+        [(ngModel)]="form.codigo"
+        placeholder="Ej. SIS101"
+      />
     </app-form-field>
 
     <app-form-field label="Créditos" forId="creditos" [error]="errors['creditos'] || ''">
-      <input id="creditos" name="creditos" type="number" min="1" max="6" [(ngModel)]="form.creditos" />
+      <input
+        id="creditos"
+        name="creditos"
+        type="number"
+        min="1"
+        max="6"
+        [(ngModel)]="form.creditos"
+      />
     </app-form-field>
 
-    <app-form-field label="Sesiones por semana" forId="sesionesSemana" help="Entre 1 y 4 sesiones" [error]="errors['sesionesSemana'] || ''">
-      <input id="sesionesSemana" name="sesionesSemana" type="number" min="1" max="4" [(ngModel)]="form.sesionesSemana" />
+    <app-form-field
+      label="Sesiones por semana"
+      forId="sesionesSemana"
+      help="Entre 1 y 4 sesiones"
+      [error]="errors['sesionesSemana'] || ''"
+    >
+      <input
+        id="sesionesSemana"
+        name="sesionesSemana"
+        type="number"
+        min="1"
+        max="4"
+        [(ngModel)]="form.sesionesSemana"
+      />
     </app-form-field>
 
     <div class="form-actions">

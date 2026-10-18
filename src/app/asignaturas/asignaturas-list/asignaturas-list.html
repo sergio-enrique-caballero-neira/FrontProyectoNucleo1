@@ -26,7 +26,13 @@
           <td>{{ item.sesionesSemana }}</td>
           <td>
             <button class="row-action" type="button" (click)="editar(item)">Editar</button>
-            <button class="row-action row-action--danger" type="button" (click)="abrirEliminar(item)">Eliminar</button>
+            <button
+              class="row-action row-action--danger"
+              type="button"
+              (click)="abrirEliminar(item)"
+            >
+              Eliminar
+            </button>
           </td>
         </tr>
       </tbody>
@@ -43,6 +49,7 @@
     [message]="dialogMessage"
     [confirmText]="dialogConfirmText"
     (confirmed)="confirmar()"
-    (cancelled)="cancelar()">
+    (cancelled)="cancelar()"
+  >
   </app-confirm-dialog>
 </section>

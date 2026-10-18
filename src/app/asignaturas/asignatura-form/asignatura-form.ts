@@ -50,7 +50,9 @@ export class AsignaturaForm {
     if (Object.keys(this.errors).length > 0) {
       return;
     }
-    this.alert = this.isEdit ? 'Asignatura actualizada correctamente.' : 'Asignatura creada correctamente.';
+    this.alert = this.isEdit
+      ? 'Asignatura actualizada correctamente.'
+      : 'Asignatura creada correctamente.';
   }
 
   cancelar(): void {

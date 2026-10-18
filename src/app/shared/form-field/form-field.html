@@ -1,6 +1,6 @@
 <div class="app-field" [class.app-field--error]="error">
   <label class="app-field-label" [attr.for]="forId">{{ label }}</label>
   <ng-content></ng-content>
-  <p class="app-field-help" *ngIf="help && !error">{{ help }}</p>
-  <p class="app-field-error" *ngIf="error">{{ error }}</p>
+  <p class="app-field-help" *ngIf="help && !error" [id]="helpId">{{ help }}</p>
+  <p class="app-field-error" *ngIf="error" [id]="errorId" role="alert">{{ error }}</p>
 </div>

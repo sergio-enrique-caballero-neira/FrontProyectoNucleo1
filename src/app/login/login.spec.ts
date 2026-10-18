@@ -1,12 +1,14 @@
 import { TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Login } from './login';
+import { ThemeToggle } from '../theme/theme-toggle/theme-toggle';
 
 describe('Login', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterModule.forRoot([])],
-      declarations: [Login],
+      imports: [CommonModule, RouterModule.forRoot([])],
+      declarations: [Login, ThemeToggle],
     }).compileComponents();
   });
 

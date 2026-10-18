@@ -11,7 +11,6 @@ import { HorarioService } from '../../data/horario.service';
 export class HorarioForm {
   form = { codigo: '', carrera: '' };
   errors: Record<string, string> = {};
-  alert = '';
   isEdit = false;
   editingId: number | null = null;
 
@@ -41,7 +40,10 @@ export class HorarioForm {
     }
     const existe = this.horarioService
       .lista()
-      .some((horario) => horario.codigo.toLowerCase() === codigo.toLowerCase() && horario.id !== this.editingId);
+      .some(
+        (horario) =>
+          horario.codigo.toLowerCase() === codigo.toLowerCase() && horario.id !== this.editingId,
+      );
     if (codigo && existe) {
       this.errors['codigo'] = 'El código ya existe.';
     }
@@ -50,11 +52,11 @@ export class HorarioForm {
     }
     if (this.isEdit && this.editingId) {
       this.horarioService.actualizar(this.editingId, { codigo, carrera });
-      this.alert = 'Horario actualizado correctamente.';
-    } else {
-      this.horarioService.crear({ codigo, carrera });
-      this.alert = 'Horario creado correctamente.';
+      this.router.navigate(['/horarios']);
+      return;
     }
+    const creado = this.horarioService.crear({ codigo, carrera });
+    this.router.navigate(['/horarios', creado.id]);
   }
 
   cancelar(): void {

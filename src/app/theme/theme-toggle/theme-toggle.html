@@ -1,4 +1,9 @@
-<button class="theme-toggle" type="button" (click)="toggle()" [attr.aria-label]="isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'">
+<button
+  class="theme-toggle"
+  type="button"
+  (click)="toggle()"
+  [attr.aria-label]="isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
+>
   <i *ngIf="!isDark" class="fa-solid fa-moon" aria-hidden="true"></i>
   <i *ngIf="isDark" class="fa-solid fa-sun" aria-hidden="true"></i>
 </button>

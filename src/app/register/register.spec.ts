@@ -1,12 +1,14 @@
 import { TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Register } from './register';
+import { ThemeToggle } from '../theme/theme-toggle/theme-toggle';
 
 describe('Register', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterModule.forRoot([])],
-      declarations: [Register],
+      imports: [CommonModule, RouterModule.forRoot([])],
+      declarations: [Register, ThemeToggle],
     }).compileComponents();
   });
 
