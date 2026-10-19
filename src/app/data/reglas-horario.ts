@@ -1,4 +1,4 @@
-import { BloqueHorario } from './sample-data';
+import { BloqueHorario } from './modelos';
 
 export const DURACION_SESION_HORAS = 2;
 

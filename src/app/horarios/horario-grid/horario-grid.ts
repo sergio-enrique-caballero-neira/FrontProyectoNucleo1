@@ -1,13 +1,16 @@
-import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  computed,
+  effect,
+  inject,
+  OnDestroy,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  asignaturas,
-  Asignatura,
-  BloqueHorario,
-  DIAS_SEMANA,
-  Horario,
-} from '../../data/sample-data';
+import { Asignatura, BloqueHorario, DIAS_SEMANA, Horario } from '../../data/modelos';
+import { AsignaturaService } from '../../data/asignatura.service';
 import { HorarioService } from '../../data/horario.service';
 import {
   bloquesSeSolapan,
@@ -34,13 +37,21 @@ export class HorarioGrid implements OnDestroy {
       this.horas.filter((hora) => !esInicioValido(dia, hora)).map((hora) => `${dia}|${hora}`),
     ),
   );
-  asignaturas = asignaturas;
-
   readonly duracionSesion = DURACION_SESION_HORAS;
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly horarioService = inject(HorarioService);
+  private readonly asignaturaService = inject(AsignaturaService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  get asignaturas(): Asignatura[] {
+    return this.asignaturaService.lista();
+  }
+
+  readonly cargado = computed(
+    () => this.horarioService.cargado() && this.asignaturaService.cargado(),
+  );
 
   private readonly paramId = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
@@ -76,6 +87,14 @@ export class HorarioGrid implements OnDestroy {
       this.paramId();
       this.alert = '';
     });
+    Promise.all([this.asignaturaService.cargar(), this.horarioService.cargar()]).then(
+      (resultados) => {
+        const error = resultados.find((resultado) => !resultado.ok);
+        if (error && !error.ok) {
+          this.mostrarAlerta('error', error.motivo);
+        }
+      },
+    );
   }
 
   volver(): void {
@@ -92,7 +111,7 @@ export class HorarioGrid implements OnDestroy {
 
   tonoDe(id: number): number {
     const indice = this.asignaturas.findIndex((item) => item.id === id);
-    return (indice < 0 ? 0 : indice) + 1;
+    return ((indice < 0 ? 0 : indice) % 6) + 1;
   }
 
   bloquesDe(asignaturaId: number): number {
@@ -144,7 +163,7 @@ export class HorarioGrid implements OnDestroy {
     this.invalidTarget = '';
   }
 
-  onDropCell(event: DragEvent, indiceHora: number, dia: string): void {
+  async onDropCell(event: DragEvent, indiceHora: number, dia: string): Promise<void> {
     event.preventDefault();
     const hora = this.horas[indiceHora];
     this.dragOver = '';
@@ -160,7 +179,7 @@ export class HorarioGrid implements OnDestroy {
       if (!asignatura) {
         return;
       }
-      const resultado = this.horarioService.agregarBloque(horario.id, {
+      const resultado = await this.horarioService.agregarBloque(horario.id, {
         asignaturaId,
         diaSemana: dia,
         horaInicio: hora,
@@ -174,7 +193,7 @@ export class HorarioGrid implements OnDestroy {
     }
     if (data.startsWith('bloque:')) {
       const bloqueId = Number(data.split(':')[1]);
-      const resultado = this.horarioService.moverBloque(horario.id, bloqueId, {
+      const resultado = await this.horarioService.moverBloque(horario.id, bloqueId, {
         diaSemana: dia,
         horaInicio: hora,
       });
@@ -227,17 +246,21 @@ export class HorarioGrid implements OnDestroy {
     this.bloquePendiente = null;
   }
 
-  confirmarEliminar(): void {
+  async confirmarEliminar(): Promise<void> {
     const horario = this.horario();
     const bloque = this.bloquePendiente;
-    if (horario && bloque) {
-      this.horarioService.eliminarBloque(horario.id, bloque.id);
-      this.mostrarAlerta(
-        'success',
-        `Bloque de ${this.nombreAsignatura(bloque.asignaturaId)} eliminado.`,
-      );
-    }
     this.cancelarEliminar();
+    if (horario && bloque) {
+      const resultado = await this.horarioService.eliminarBloque(horario.id, bloque.id);
+      if (resultado.ok) {
+        this.mostrarAlerta(
+          'success',
+          `Bloque de ${this.nombreAsignatura(bloque.asignaturaId)} eliminado.`,
+        );
+      } else {
+        this.mostrarAlerta('error', resultado.motivo);
+      }
+    }
   }
 
   seleccionar(bloque: BloqueHorario): void {
@@ -248,7 +271,7 @@ export class HorarioGrid implements OnDestroy {
     return this.celdaSeleccionada() === `${bloque.diaSemana}|${bloque.horaInicio}`;
   }
 
-  onBloqueKeydown(event: KeyboardEvent, bloque: BloqueHorario): void {
+  async onBloqueKeydown(event: KeyboardEvent, bloque: BloqueHorario): Promise<void> {
     if (event.key === 'Delete' || event.key === 'Backspace') {
       event.preventDefault();
       this.abrirEliminar(bloque);
@@ -291,7 +314,7 @@ export class HorarioGrid implements OnDestroy {
     if (!horario) {
       return;
     }
-    const resultado = this.horarioService.moverBloque(horario.id, bloque.id, {
+    const resultado = await this.horarioService.moverBloque(horario.id, bloque.id, {
       diaSemana: this.dias[indiceDia],
       horaInicio: this.horas[indiceHora],
     });
@@ -309,7 +332,7 @@ export class HorarioGrid implements OnDestroy {
     }
   }
 
-  onChipKeydown(event: KeyboardEvent, asignatura: Asignatura): void {
+  async onChipKeydown(event: KeyboardEvent, asignatura: Asignatura): Promise<void> {
     if (event.key !== 'Enter' && event.key !== ' ') {
       return;
     }
@@ -323,7 +346,7 @@ export class HorarioGrid implements OnDestroy {
       this.mostrarAlerta('error', 'No hay un espacio libre válido en esta rejilla.');
       return;
     }
-    const resultado = this.horarioService.agregarBloque(horario.id, {
+    const resultado = await this.horarioService.agregarBloque(horario.id, {
       asignaturaId: asignatura.id,
       diaSemana: destino.dia,
       horaInicio: destino.hora,
@@ -365,7 +388,9 @@ export class HorarioGrid implements OnDestroy {
     clearTimeout(this.alertTimer);
     this.alertTimer = setTimeout(() => {
       this.alert = '';
+      this.cdr.markForCheck();
     }, 4000);
+    this.cdr.markForCheck();
   }
 
   ngOnDestroy(): void {

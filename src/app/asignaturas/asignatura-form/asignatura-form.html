@@ -13,6 +13,7 @@
   </div>
 
   <app-alert-message type="success" [message]="alert" *ngIf="alert"></app-alert-message>
+  <app-alert-message type="error" [message]="error" *ngIf="error"></app-alert-message>
 
   <form class="form-card" (ngSubmit)="guardar()">
     <app-form-field label="Nombre" forId="nombre" [error]="errors['nombre'] || ''">
@@ -64,7 +65,7 @@
 
     <div class="form-actions">
       <app-button variant="secondary" type="button" (click)="cancelar()">Cancelar</app-button>
-      <app-button type="submit">Guardar</app-button>
+      <app-button type="submit" [disabled]="guardando">Guardar</app-button>
     </div>
   </form>
 </section>

@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { asignaturas, Asignatura } from '../../data/sample-data';
+import { Asignatura } from '../../data/modelos';
+import { AsignaturaService } from '../../data/asignatura.service';
 import { HorarioService } from '../../data/horario.service';
 
 @Component({
@@ -10,12 +11,31 @@ import { HorarioService } from '../../data/horario.service';
 })
 export class AsignaturasList {
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly asignaturaService = inject(AsignaturaService);
   private readonly horarioService = inject(HorarioService);
 
-  items: Asignatura[] = [...asignaturas];
+  readonly cargado = this.asignaturaService.cargado;
   confirmOpen = false;
   hasSchedules = false;
   selected: Asignatura | null = null;
+  error = '';
+
+  constructor() {
+    Promise.all([this.asignaturaService.cargar(true), this.horarioService.cargar(true)]).then(
+      (resultados) => {
+        const fallido = resultados.find((resultado) => !resultado.ok);
+        if (fallido && !fallido.ok) {
+          this.error = fallido.motivo;
+          this.cdr.markForCheck();
+        }
+      },
+    );
+  }
+
+  get items(): Asignatura[] {
+    return this.asignaturaService.lista();
+  }
 
   get dialogTitle(): string {
     return this.hasSchedules ? 'Asignatura con horarios' : 'Eliminar asignatura';
@@ -52,10 +72,14 @@ export class AsignaturasList {
     this.selected = null;
   }
 
-  confirmar(): void {
-    if (this.selected && !this.hasSchedules) {
-      this.items = this.items.filter((item) => item.id !== this.selected?.id);
-    }
+  async confirmar(): Promise<void> {
+    const seleccionada = this.selected;
+    const eliminar = seleccionada && !this.hasSchedules;
     this.cancelar();
+    if (eliminar) {
+      const resultado = await this.asignaturaService.eliminar(seleccionada.id);
+      this.error = resultado.ok ? '' : resultado.motivo;
+      this.cdr.markForCheck();
+    }
   }
 }

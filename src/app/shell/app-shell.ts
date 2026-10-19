@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-shell',
@@ -6,4 +7,10 @@ import { Component } from '@angular/core';
   templateUrl: './app-shell.html',
   styleUrls: ['./app-shell.css'],
 })
-export class AppShell {}
+export class AppShell {
+  private readonly auth = inject(AuthService);
+
+  cerrarSesion(): void {
+    this.auth.cerrarSesion();
+  }
+}

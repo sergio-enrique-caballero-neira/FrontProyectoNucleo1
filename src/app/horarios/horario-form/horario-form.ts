@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HorarioService } from '../../data/horario.service';
@@ -12,27 +12,44 @@ import { HorarioService } from '../../data/horario.service';
 export class HorarioForm {
   form = { codigo: '', carrera: '' };
   errors: Record<string, string> = {};
+  error = '';
   isEdit = false;
   editingId: number | null = null;
+  guardando = false;
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly horarioService = inject(HorarioService);
 
   constructor() {
-    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe((params) => {
-      const found = this.horarioService.obtener(Number(params.get('id')));
+    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe(async (params) => {
+      this.errors = {};
+      this.error = '';
+      const carga = await this.horarioService.cargar();
+      if (!carga.ok) {
+        this.error = carga.motivo;
+      }
+      const id = params.get('id');
+      const found = this.horarioService.obtener(Number(id));
       this.isEdit = found !== undefined;
       this.editingId = found?.id ?? null;
-      this.errors = {};
+      if (id !== null && !found && !this.error) {
+        this.error = 'El horario solicitado no existe.';
+      }
       this.form = found
         ? { codigo: found.codigo, carrera: found.carrera }
         : { codigo: '', carrera: '' };
+      this.cdr.markForCheck();
     });
   }
 
-  guardar(): void {
+  async guardar(): Promise<void> {
+    if (this.guardando) {
+      return;
+    }
     this.errors = {};
+    this.error = '';
     const codigo = this.form.codigo.trim();
     const carrera = this.form.carrera.trim();
     if (!codigo) {
@@ -53,16 +70,35 @@ export class HorarioForm {
     if (Object.keys(this.errors).length > 0) {
       return;
     }
+    this.guardando = true;
     if (this.isEdit && this.editingId) {
-      this.horarioService.actualizar(this.editingId, { codigo, carrera });
-      this.router.navigate(['/horarios']);
+      const resultado = await this.horarioService.actualizar(this.editingId, { codigo, carrera });
+      this.guardando = false;
+      if (resultado.ok) {
+        this.router.navigate(['/horarios']);
+      } else {
+        this.mostrarError(resultado.motivo, resultado.campos);
+      }
       return;
     }
-    const creado = this.horarioService.crear({ codigo, carrera });
-    this.router.navigate(['/horarios', creado.id]);
+    const resultado = await this.horarioService.crear({ codigo, carrera });
+    this.guardando = false;
+    if (resultado.ok) {
+      this.router.navigate(['/horarios', resultado.horario.id]);
+    } else {
+      this.mostrarError(resultado.motivo, resultado.campos);
+    }
   }
 
   cancelar(): void {
     this.router.navigate(['/horarios']);
+  }
+
+  private mostrarError(motivo: string, campos: Record<string, string>): void {
+    this.errors = { ...campos };
+    if (Object.keys(this.errors).length === 0) {
+      this.error = motivo;
+    }
+    this.cdr.markForCheck();
   }
 }

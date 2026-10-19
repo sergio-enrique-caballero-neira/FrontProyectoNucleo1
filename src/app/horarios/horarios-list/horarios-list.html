@@ -7,6 +7,8 @@
     <app-button type="button" (click)="nuevo()">Nuevo horario</app-button>
   </div>
 
+  <app-alert-message type="error" [message]="error" *ngIf="error"></app-alert-message>
+
   <ng-container *ngIf="items.length; else empty">
     <app-data-table>
       <thead>
@@ -39,7 +41,9 @@
   </ng-container>
 
   <ng-template #empty>
-    <app-empty-state message="Aún no hay horarios registrados."></app-empty-state>
+    <app-empty-state
+      [message]="cargado() ? 'Aún no hay horarios registrados.' : 'Cargando horarios…'"
+    ></app-empty-state>
   </ng-template>
 
   <app-confirm-dialog

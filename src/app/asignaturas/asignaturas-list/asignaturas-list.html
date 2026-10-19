@@ -7,6 +7,8 @@
     <app-button type="button" (click)="nueva()">Nueva asignatura</app-button>
   </div>
 
+  <app-alert-message type="error" [message]="error" *ngIf="error"></app-alert-message>
+
   <ng-container *ngIf="items.length; else empty">
     <app-data-table>
       <thead>
@@ -40,7 +42,9 @@
   </ng-container>
 
   <ng-template #empty>
-    <app-empty-state message="Aún no hay asignaturas registradas."></app-empty-state>
+    <app-empty-state
+      [message]="cargado() ? 'Aún no hay asignaturas registradas.' : 'Cargando asignaturas…'"
+    ></app-empty-state>
   </ng-template>
 
   <app-confirm-dialog

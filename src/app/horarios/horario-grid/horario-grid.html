@@ -167,7 +167,9 @@
   </ng-container>
 
   <ng-template #noEncontrado>
-    <app-empty-state message="No se encontró el horario solicitado."></app-empty-state>
+    <app-empty-state
+      [message]="cargado() ? 'No se encontró el horario solicitado.' : 'Cargando horario…'"
+    ></app-empty-state>
   </ng-template>
 
   <app-confirm-dialog

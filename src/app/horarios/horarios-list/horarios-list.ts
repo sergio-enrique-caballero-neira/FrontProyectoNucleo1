@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Horario } from '../../data/sample-data';
+import { Horario } from '../../data/modelos';
 import { HorarioService } from '../../data/horario.service';
 
 @Component({
@@ -10,10 +10,22 @@ import { HorarioService } from '../../data/horario.service';
 })
 export class HorariosList {
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly horarioService = inject(HorarioService);
 
+  readonly cargado = this.horarioService.cargado;
   confirmOpen = false;
   selected: Horario | null = null;
+  error = '';
+
+  constructor() {
+    this.horarioService.cargar(true).then((resultado) => {
+      if (!resultado.ok) {
+        this.error = resultado.motivo;
+        this.cdr.markForCheck();
+      }
+    });
+  }
 
   get items(): Horario[] {
     return this.horarioService.lista();
@@ -41,10 +53,13 @@ export class HorariosList {
     this.selected = null;
   }
 
-  confirmar(): void {
-    if (this.selected) {
-      this.horarioService.eliminar(this.selected.id);
-    }
+  async confirmar(): Promise<void> {
+    const seleccionado = this.selected;
     this.cancelar();
+    if (seleccionado) {
+      const resultado = await this.horarioService.eliminar(seleccionado.id);
+      this.error = resultado.ok ? '' : resultado.motivo;
+      this.cdr.markForCheck();
+    }
   }
 }

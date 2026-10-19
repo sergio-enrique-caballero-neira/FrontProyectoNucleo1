@@ -12,7 +12,7 @@
 
     <div class="shell-actions">
       <app-theme-toggle></app-theme-toggle>
-      <button class="shell-logout" type="button" routerLink="/login">
+      <button class="shell-logout" type="button" (click)="cerrarSesion()">
         <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
         <span>Cerrar sesión</span>
       </button>

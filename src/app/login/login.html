@@ -17,7 +17,7 @@
         <p class="login-subtitle">Inicia sesión para gestionar tus horarios</p>
       </div>
 
-      <form class="login-form">
+      <form class="login-form" (ngSubmit)="iniciarSesion()" novalidate>
         <label class="field">
           <i class="fa-solid fa-user field-icon" aria-hidden="true"></i>
           <input
@@ -28,6 +28,7 @@
             placeholder=" "
             autocomplete="username"
             required
+            [(ngModel)]="form.usuario"
           />
           <span class="field-label">Usuario</span>
         </label>
@@ -42,17 +43,18 @@
             placeholder=" "
             autocomplete="current-password"
             required
+            [(ngModel)]="form.contrasena"
           />
           <span class="field-label">Contraseña</span>
         </label>
 
-        <div class="login-options">
-          <a class="link" routerLink="/recuperar">¿Olvidaste tu contraseña?</a>
-          <a class="link" routerLink="/register">Registrarse</a>
-        </div>
+        <p class="login-error" role="alert" *ngIf="error">
+          <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+          <span>{{ error }}</span>
+        </p>
 
-        <button class="btn-login" type="button" routerLink="/asignaturas">
-          <span class="btn-login-text">Iniciar sesión</span>
+        <button class="btn-login" type="submit" [disabled]="cargando">
+          <span class="btn-login-text">{{ cargando ? 'Ingresando…' : 'Iniciar sesión' }}</span>
           <i class="fa-solid fa-arrow-right btn-login-icon" aria-hidden="true"></i>
         </button>
       </form>
